@@ -1,0 +1,23 @@
+services:
+  db:
+    image: pgvector/pgvector:pg18
+    restart: always
+    # Note: On Railway, ports are usually handled via the UI/Variables, 
+    # but keeping this is fine for local parity.
+    ports:
+      - "5432:5432"
+    environment:
+      # These are the actual variables the Postgres Image looks for:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "lp8KIbZ~M7uPCrfoLa3s8iFj72npQB2E"
+      POSTGRES_DB: "railway"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d railway"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  db_data:

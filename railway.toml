@@ -1,0 +1,27 @@
+# railway.toml
+
+[build]
+# We use the Dockerfile.railway
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
+
+[deploy]
+preDeployCommand = "sh -c 'npm run prisma:migrate:deploy:seed'"
+
+# 1. Healthcheck: Railway will ping this to ensure the app is running.
+# If you don't have a /health route, change this to "/"
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 100
+
+# 2. Restart Policy: If the app crashes, restart it.
+restartPolicyType = "ON_FAILURE"
+
+# 3. Start Command: This overrides the CMD in the Dockerfile.
+# Migrations and seeding now happen in preDeployCommand via deploy.sh
+startCommand = "node dist/server.js"
+
+# 4. Replicas: Start with 1 instance (scale up later if needed)
+numReplicas = 1
+
+# 5. Sleep Application: Keep false for production apps (so it doesn't sleep like the free tier)
+sleepApplication = false
